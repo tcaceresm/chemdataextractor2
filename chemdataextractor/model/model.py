@@ -7,12 +7,27 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
+from ast import Str
 
 import logging
+from pickle import TRUE
+from tkinter.tix import Tree
+from tokenize import String
+from numpy import require
 import six
+from sympy import compose
+
+# from parse.template import QuantityModelTemplateParser ########
 
 from .base import BaseModel, StringType, ListType, ModelType, SetType
 from .units.temperature import TemperatureModel
+###agregado por T. Cáceres###
+from .units.bioactivity import BioactivityModel
+from ..parse.biotarget import TargetParser
+from ..parse.bioactive import BioactiveParser
+from ..parse.biodrug_v2 import DrugParser
+from ..parse.bioactive_units import BioUnitsParser
+###
 from .units.length import LengthModel
 from ..parse.cem import CompoundParser, CompoundHeadingParser, ChemicalLabelParser, CompoundTableParser, names_only, labels_only, roles_only
 from ..parse.ir import IrParser
@@ -20,9 +35,9 @@ from ..parse.mp_new import MpParser
 from ..parse.nmr import NmrParser
 from ..parse.tg import TgParser
 from ..parse.uvvis import UvvisParser
-from ..parse.elements import R, I, Optional, W, Group, NoMatch
+from ..parse.elements import R, I, Optional, W, Group, NoMatch, Hide
 from ..parse.actions import merge, join
-from ..model.units.quantity_model import QuantityModel, DimensionlessModel
+from ..model.units.quantity_model import QuantityModel, DimensionlessModel, MultiQuantityModelTemplateParser ######
 from ..parse.auto import AutoTableParser, AutoSentenceParser
 from ..parse.apparatus import ApparatusParser
 
@@ -265,4 +280,27 @@ class CNLabel(BaseModel):
     label_Juraj = StringType(parse_expression=coordination_number_label)
     compound = ModelType(Compound, required=False)
     parsers = [AutoSentenceParser(), AutoTableParser()]
+
+
+
+
+
+
+
+
+
+
+#######################
+
+class DrugSearch(BaseModel):
+    compound = ModelType(Compound)
+    # drug = StringType(required=True)
+    bioactivity = StringType(required=True)
+    units = StringType()
+    target = StringType(required=True)
+    parsers = [AutoSentenceParser(), BioactiveParser(), TargetParser(), DrugParser(), BioUnitsParser()]
+
+#######################
+
+
 
